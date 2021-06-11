@@ -11,7 +11,7 @@ jobs:
     - name: Prepare enviroment
       run: |
         sudo chmod +x /p4c/tools/ci-build.sh
-        /p4c/tools/ci-build.sh
+        sudo /p4c/tools/ci-build.sh
         sudo mkdir -p /p4c/extensions
         sudo ln -s /p4c-ftt extensions/p4c-ftt
     - name: Build P4 backend
