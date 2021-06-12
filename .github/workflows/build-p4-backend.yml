@@ -10,8 +10,8 @@ jobs:
         libfl-dev libgmp-dev libboost-dev libboost-iostreams-dev \
         libboost-graph-dev llvm pkg-config python python-scapy python-ipaddr python-ply python3-pip \
         tcpdump autoconf curl make unzip
-        pip3 install --upgrade setuptools
         pip3 install --upgrade "pip < 21.0"
+        pip3 install --upgrade setuptools
         pip3 install scapy ply
         git clone https://github.com/protocolbuffers/protobuf.git
         cd protobuf
