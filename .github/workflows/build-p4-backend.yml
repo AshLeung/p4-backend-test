@@ -4,6 +4,24 @@ jobs:
   build-parser-graph:
     runs-on: ubuntu-16.04
     steps:
+    - name: Install dependency
+      run: |
+        sudo apt-get install -y cmake g++ git automake libtool libgc-dev bison flex \
+        libfl-dev libgmp-dev libboost-dev libboost-iostreams-dev \
+        libboost-graph-dev llvm pkg-config python python-scapy python-ipaddr python-ply python3-pip \
+        tcpdump autoconf curl make unzip
+        pip3 install --upgrade setuptools
+        pip3 install --upgrade "pip < 21.0"
+        pip3 install scapy ply
+        git clone https://github.com/protocolbuffers/protobuf.git
+        cd protobuf
+        git checkout v3.6.1
+        git submodule update --init --recursive
+        ./autogen.sh
+        ./configure
+        make -j2
+        make check && sudo make install
+        sudo ldconfig
     - name: Clone source code
       run: |
         sudo git clone --recursive https://github.com/p4lang/p4c.git /p4c
@@ -11,19 +29,19 @@ jobs:
     - name: Prepare enviroment
       run: |
         sudo chmod +x /p4c/tools/ci-build.sh
-        sudo /p4c/tools/ci-build.sh
+        sudo chmod +x /p4c/bootstrap.sh
         sudo mkdir -p /p4c/extensions
-        sudo ln -s /p4c-ftt extensions/p4c-ftt
+        sudo ln -s /p4c-ftt /p4c/extensions/p4c-ftt
     - name: Build P4 backend
       run: |
         cd /p4c
-        sudo ./bootstrap
-        cd build && sudo make 
+        sudo ./bootstrap.sh
+        cd build && sudo make -j2
         sudo make install
     - name: Test ftt backend
       run: |
         cd /p4c-ftt/test-data
-        sudo make
+        sudo make -j2
     - name: Upload artifact
       uses: actions/upload-artifact@master
       with:
